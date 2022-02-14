@@ -36,12 +36,16 @@
       }
     }
 
+
+
     function createList(json) {
       const listElement = document.createElement('div');
       listElement.classList.add('list-group');
       console.log(json)
+      const highlightedRepos = ['questionandanswer', 'githubbrowser', 'naivechain', 'SistemaVotos']
 
       for (var i = 0; i < json['data'].length; i++) {
+        if (!highlightedRepos.includes(json['data'][i]['name'])) continue
         // create an item for each one
         const listItem = document.createElement('a');
         listItem.classList.add('list-group-item');
@@ -87,48 +91,48 @@
   </nav>
   <div class="container-lg bg-light mx-lg-auto mt-5 p-5 border rounded">
     <div class="row justify-content-center">
-      <div class="col-xxl-6">
-        <div class="d-flex justify-content-center">
-          <img class="shadow mb-5 bg-body rounded" height="150" width="150" 
-                src="https://www.gravatar.com/avatar/682b7d12eff096b4d35ee3437020e081?s=200" alt="Felipe's picture" />
-        </div>
-        <div>
-          <h2>Hello there!</h2>
-          <p>Welcome to my page! Let me tell you a bit about who I am.</p>
-          <p>
-            I hold a Bachelor's degree in Computer Science from the Federal University of Technology – Paraná, Brazil.
-            I also have a Master's degree in Information Systems from the Polytechnic Institute of Bragança, Portugal.
-          </p>
-          <p>
-            Besides CS, I have experience teaching basic informatics, and I have worked almost a year in the human
-            resources department.
-            As for hobbies, I am currently learning French. I also like to learn to take pictures and produce videos in
-            my free time, which you can check <a target="_blank" href="https://instagram.com/felipesfotos">here</a>. 
-          </p>
-          <p>
-            Now back to CS, my favorite book is "Introduction to Algorithms" by Thomas H. Cormen. The "data structure" 
-            topic was the one I most enjoyed investing time, back in graduation. I find it very interesting to learn 
-            the best way to manipulate data, as in sorting algorithms. I also loved to learn how to store data most
-            efficiently for each use, as in heaps, stack, and queues.
-          </p>
-          <p>
-            If you want, you can take a look at my repositories listed here. Most of them I made for university's 
-            subject and studies. Most recently, I have started doing off-work projects to learn new technologies.
-            For example, I made the GitHub browser project to learn a little bit of Flutter.
-          </p>
-          <p>
-            I should improve the "readme" of the relevant projects soon. If you have any suggestions of anything I could
-            make better, please, let me know.            
-          </p>
-        </div>
+      <div class="d-flex justify-content-center">
+        <img class="shadow mb-5 bg-body rounded" height="150" width="150" 
+              src="https://www.gravatar.com/avatar/682b7d12eff096b4d35ee3437020e081?s=200" alt="Felipe's picture" />
       </div>
-      <div class="col-xxl-6">
-        <h3>Repository List</h3>
-        <div id="repo-list">
-          <div class="d-flex justify-content-center">
-            <div class="spinner-border text-dark" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
+      <div>
+        <h2>Hello there!</h2>
+        <p>Welcome to my page! Let me tell you a bit about who I am.</p>
+        <p>
+          I hold a Bachelor's degree in Computer Science from the Federal University of Technology – Paraná, Brazil.
+          I also have a Master's degree in Information Systems from the Polytechnic Institute of Bragança, Portugal.
+        </p>
+        <p>
+          Besides CS, I have experience teaching basic computer skills, and I have worked almost a year in human
+          resources.
+          As for hobbies, I am currently learning French. I also like to learn to take pictures and produce videos in
+          my free time, which you can check <a target="_blank" href="https://instagram.com/felipesfotos">here</a>. 
+        </p>
+        <p>
+          Now back to CS, my favorite book is "Introduction to Algorithms" by Thomas H. Cormen. The "data structure" 
+          topic was the one I most enjoyed investing time, back in graduation. I find it very interesting to learn 
+          the best way to manipulate data, as in sorting algorithms. I also loved to learn how to store data most
+          efficiently for each use, as in heaps, stack, and queues.
+        </p>
+        <p>
+          You can take a look at my open-source repositories. I hightlighted some of them here. Most of them
+          were made as university coursework and study aids. Most recently, I have started doing off-work projects to
+          learn new technologies.
+          For example, I made the GitHub browser project to learn a little bit of Flutter, and the Question And Answer
+          project to practice Go.
+        </p>
+        <p>
+          I'll improve the "readme" of the relevant projects soon. If you have any questions or suggestions about my
+          website, repositories or curriculum feel free to contact me.
+        </p>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <h3>Highlighted Repositories</h3>
+      <div id="repo-list">
+        <div class="d-flex justify-content-center">
+          <div class="spinner-border text-dark" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
         </div>
       </div>
