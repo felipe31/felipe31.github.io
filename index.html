@@ -1,142 +1,162 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-  <title>Felipe Soares</title>
+  <head>
+    <title>Felipe Soares</title>
 
-  <meta charset="utf-8" />
-  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
-          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">          
-  </script>
-  <script type="module">
-    import { request } from "https://cdn.skypack.dev/@octokit/request";
-    const user = 'Felipe31';
-    function fetchRepos(user) {
-      try {
-        const response = request(`GET /users/${user}/repos`);
-        return new Promise((resolve, reject) => {
-          resolve(response);
-        });
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <link rel="icon" type="image/x-icon" href="./images/f-favicon.png" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module">
+      import { request } from "https://cdn.skypack.dev/@octokit/request";
+      const user = "Felipe31";
+      function fetchRepos(user) {
+        try {
+          const response = request(`GET /users/${user}/repos`);
+          return new Promise((resolve, reject) => {
+            resolve(response);
+          });
+        } catch (err) {
+          console.log("fetch failed", err);
+        }
       }
-      catch (err) {
-        console.log('fetch failed', err);
+      function fetchRepoDetails(user, repo) {
+        try {
+          const response = request(`GET /repos/${user}/${repo}`);
+          return new Promise((resolve, reject) => {
+            resolve(response);
+          });
+        } catch (err) {
+          console.log("fetch failed", err);
+        }
       }
-    }
-    function fetchRepoDetails(user, repo) {
-      try {
-        const response = request(`GET /repos/${user}/${repo}`);
-        return new Promise((resolve, reject) => {
-          resolve(response);
-        });
-      }
-      catch (err) {
-        console.log('fetch failed', err);
-      }
-    }
 
+      function createList(json) {
+        const listElement = document.createElement("div");
+        listElement.classList.add("list-group");
+        console.log(json);
+        const highlightedRepos = ["questionandanswer", "githubbrowser", "naivechain", "quincunx-game"];
 
+        for (var i = 0; i < json["data"].length; i++) {
+          if (!highlightedRepos.includes(json["data"][i]["name"])) continue;
+          // create an item for each one
+          const listItem = document.createElement("a");
+          listItem.classList.add("list-group-item");
+          listItem.classList.add("list-group-item-action");
+          listItem.classList.add("d-flex");
+          listItem.classList.add("justify-content-between");
+          listItem.classList.add("align-items-start");
+          listItem.href = json["data"][i]["html_url"];
+          listItem.target = "_blank";
 
-    function createList(json) {
-      const listElement = document.createElement('div');
-      listElement.classList.add('list-group');
-      console.log(json)
-      const highlightedRepos = ['questionandanswer', 'githubbrowser', 'naivechain', 'SistemaVotos']
+          // Add the item text
+          listItem.innerHTML = json["data"][i]["name"];
 
-      for (var i = 0; i < json['data'].length; i++) {
-        if (!highlightedRepos.includes(json['data'][i]['name'])) continue
-        // create an item for each one
-        const listItem = document.createElement('a');
-        listItem.classList.add('list-group-item');
-        listItem.classList.add('list-group-item-action');
-        listItem.classList.add('d-flex');
-        listItem.classList.add('justify-content-between');
-        listItem.classList.add('align-items-start');
-        listItem.href = json['data'][i]['html_url'];
-        listItem.target = '_blank';
-
-        // Add the item text
-        listItem.innerHTML =  json['data'][i]['name'] ;
-
-        fetchRepoDetails(user, json['data'][i]['name'])
-          .then(response => {
-            if (response['data']['language'] != null)
-              listItem.innerHTML += "<span class='badge bg-primary rounded-pill'>"
-                                    + response['data']['language'] + "</span>";
+          fetchRepoDetails(user, json["data"][i]["name"]).then((response) => {
+            if (response["data"]["language"] != null)
+              listItem.innerHTML +=
+                "<span class='badge bg-primary rounded-pill'>" + response["data"]["language"] + "</span>";
             console.log(response);
-            const repoList = document.getElementById('repo-list');
-            repoList.innerHTML = '';
+            const repoList = document.getElementById("repo-list");
+            repoList.innerHTML = "";
             repoList.appendChild(listElement);
+          });
 
-          })
-
-        // Add listItem to the listElement
-        listElement.appendChild(listItem);
+          // Add listItem to the listElement
+          listElement.appendChild(listItem);
+        }
       }
+      fetchRepos(user).then((response) => createList(response));
+    </script>
+    <style>
+      a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
 
-    }
-    fetchRepos(user).then(response => createList(response))
-
-
-  </script>
-</head>
-
-<body class="bg-dark">
-  <nav class="navbar shadow navbar-dark bg-dark fixed-top">
-    <div class="container-fluid justify-content-center">
-      <a class="navbar-brand" href="#">Felipe Soares</a>
-      <a class="btn btn-success" href="mailto:felipe31soares@gmail.com" target="_blank">Email me!</a>
-    </div>
-  </nav>
-  <div class="container-lg bg-light mx-lg-auto mt-5 p-5 border rounded">
-    <div class="row justify-content-center">
-      <div class="d-flex justify-content-center">
-        <img class="shadow mb-5 bg-body rounded" height="150" width="150" 
-              src="https://www.gravatar.com/avatar/682b7d12eff096b4d35ee3437020e081?s=200" alt="Felipe's picture" />
+  <body class="bg-dark">
+    <nav class="navbar shadow navbar-dark bg-dark fixed-top">
+      <div class="container-fluid justify-content-center">
+        <a class="navbar-brand" href="#">Felipe Soares</a>
+        <a class="btn btn-success" href="mailto:felipe31soares@gmail.com" target="_blank">Email me!</a>
       </div>
-      <div>
-        <h2>Hello there!</h2>
-        <p>Welcome to my page! Let me tell you a bit about who I am.</p>
-        <p>
-          I hold a Bachelor's degree in Computer Science from the Federal University of Technology – Paraná, Brazil.
-          I also have a Master's degree in Information Systems from the Polytechnic Institute of Bragança, Portugal.
-        </p>
-        <p>
-          Besides CS, I have experience teaching basic computer skills, and I have worked almost a year in human
-          resources.
-          As for hobbies, I am currently learning French. I also like to learn to take pictures and produce videos in
-          my free time, which you can check <a target="_blank" href="https://instagram.com/felipesfotos">here</a>. 
-        </p>
-        <p>
-          Now back to CS, my favorite book is "Introduction to Algorithms" by Thomas H. Cormen. The "data structure" 
-          topic was the one I most enjoyed investing time, back in graduation. I find it very interesting to learn 
-          the best way to manipulate data, as in sorting algorithms. I also loved to learn how to store data most
-          efficiently for each use, as in heaps, stack, and queues.
-        </p>
-        <p>
-          You can take a look at my open-source repositories. I hightlighted some of them here. Most of them
-          were made as university coursework and study aids. Most recently, I have started doing off-work projects to
-          learn new technologies.
-          For example, I made the GitHub browser project to learn a little bit of Flutter, and the Question And Answer
-          project to practice Go.
-        </p>
-        <p>
-          I'll improve the "readme" of the relevant projects soon. If you have any questions or suggestions about my
-          website, repositories or curriculum feel free to contact me.
-        </p>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <h3>Highlighted Repositories</h3>
-      <div id="repo-list">
+    </nav>
+    <div class="container-lg bg-light mx-lg-auto mt-5 p-5 border rounded">
+      <div class="row justify-content-center">
         <div class="d-flex justify-content-center">
-          <div class="spinner-border text-dark" role="status">
-            <span class="visually-hidden">Loading...</span>
+          <img
+            class="shadow mb-5 bg-body rounded"
+            height="150"
+            width="150"
+            src="https://www.gravatar.com/avatar/682b7d12eff096b4d35ee3437020e081?s=200"
+            alt="Felipe's picture"
+          />
+        </div>
+
+        <div>
+          <h2>Hello there!</h2>
+          <p>Welcome to my page! Let me tell you a bit about who I am.</p>
+          <p>
+            I hold a Bachelor's degree in Computer Science from the Federal University of Technology – Paraná, Brazil. I
+            also have a Master's degree in Information Systems from the Polytechnic Institute of Bragança, Portugal.
+          </p>
+          <p>
+            Besides CS, I have experience teaching basic computer skills, and I have worked almost a year in human
+            resources. As for hobbies, I am currently learning French. I also like to learn to take pictures and produce
+            videos in my free time, which you can check
+            <a target="_blank" href="https://instagram.com/felipesfotos">here</a>.
+          </p>
+          <p>
+            Now back to CS, my favorite book is "Introduction to Algorithms" by Thomas H. Cormen. The "data structure"
+            topic was the one I most enjoyed investing time, back in graduation. I find it very interesting to learn the
+            best way to manipulate data, as in sorting algorithms. I also loved to learn how to store data most
+            efficiently for each use, as in heaps, stack, and queues.
+          </p>
+          <p>
+            You can take a look at my open-source repositories. I hightlighted some of them here. Most of them were made
+            as university coursework and study aids. Most recently, I have started doing off-work projects to learn new
+            technologies. For example, I made the GitHub browser project to learn a little bit of Flutter, and the
+            Question And Answer project to practice Go.
+          </p>
+          <p>
+            If you have any questions or suggestions about my website, repositories or curriculum feel free to contact
+            me.
+          </p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <h3>Highlighted Repositories</h3>
+        <div id="repo-list">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-dark" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
         </div>
       </div>
+      <br />
+      <p align="center">
+        <a target="_blank" href="https://github.com/Felipe31"
+          ><img src="./images/github.png" alt="GitHub" width="30" height="30" />
+        </a>
+        <a target="_blank" href="https://www.linkedin.com/in/felipe31soares/"
+          ><img src="./images/linkedin.png" alt="LinkedIn" width="30" height="30"
+        /></a>
+        <a target="_blank" href="https://drive.google.com/file/d/1Nqbl4SxSa3nNbSnJIlbhhJCdoKPGUu49/view?usp=sharing"
+          ><img src="./images/cv.png" alt="LinkedIn" width="30" height="30"
+        /></a>
+      </p>
     </div>
-  </div>
-</body>
+  </body>
 </html>
